@@ -1,0 +1,221 @@
+﻿@page "/takeout"
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Take Out</h1>
+    <button class="btn btn-primary" type="button" @onclick="OpenAddItemDialog">
+        <span class="" /> Request Item
+    </button>
+</nav>
+<table class="items items-bordered items-responsive items-hover">
+    <tr>
+        <th>Item Name </th>
+        <th>Quantity</th>
+        <th>Taken By</th>
+        <th>Requested Date</th>
+        <th>Action</th>
+    </tr>
+    @foreach (var item in _items) 
+        {
+            <tr>
+                <td>@item.itemname</td>
+                <td>
+                    @item.quantity
+                </td>
+                <td>@item.staffname</td>
+                <td>
+                    @{
+                        bool isToday = item.datetaken == DateTime.Today;
+                        bool isOlder = item.datetaken < DateTime.Today;
+                        <p class='small mb-0 @(isToday ? "text-warning" : isOlder ? "text-danger" : "")'>
+                            @if (isToday || isOlder)
+                            {
+                                <span class="" />
+                            }
+                            @item.datetaken.ToString("MMM dd, yyyy")
+                        </p>
+                    }
+                </td>
+                <td class="delbutton">
+                    <button class="btn btn-outline-danger" type="button" @onclick="()=>OpenDeleteItemDialog(item)">
+                        <span class=""> Delete</span>
+                    </button>
+                </td>
+            </tr>
+        }
+</table>
+
+@if (_showAddItemDialog)
+{
+    <ModalDialog Title="Add Item" OnClose="@OnAddItemDialogClose" OkLabel="Add">
+        <form>
+            <div class="form-floating">
+                <select @bind="_itemname">
+                    @foreach (var item in _add)
+                    {
+                        <option>@item.itemname</option>
+                    }
+                </select>
+
+                @*<input type="text" class="form-control username" @bind="_itemname" placeholder="Item" />*@
+                <label for="floatingInput" class="itemname"></label>
+            </div>
+            <div class="form-floating">
+                <input type="number" class="form-control username" min="1" @bind="_quantity" placeholder="Quantity" />
+                <label for="floatingInput">Quantity</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control username" @bind="_staffname" placeholder="Staff Name" />
+                <label for="floatingInput">Taken By</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="date" class="form-control username" @bind="_datetaken" placeholder="Requested Date" />
+                <label for="floatingInput">Requested Date</label>
+            </div>
+
+            @if (!string.IsNullOrEmpty(_addItemErrorMessage))
+            {
+                <AlertMessage Type="danger" Message="@_addItemErrorMessage" />
+            }
+        </form>
+    </ModalDialog>
+}
+
+@if (_showDeleteItemDialog)
+{
+
+    <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
+
+        <p>Are you sure you want to delete <strong>@_deleteItem.itemname</strong> item and their data?</p>
+        @if (!string.IsNullOrEmpty(_deleteItemErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_deleteItemErrorMessage" />
+        }
+
+    </ModalDialog>
+}
+@code {
+    public Role UserRole { get; set; }
+    private GlobalState _globalState { get; set; }
+    private List<TakeOutDetails> _items { get; set; }
+    private List<AddInventoryDetails> _add { get; set; }
+    private bool _showAddItemDialog { get; set; }
+    private string _addItemErrorMessage { get; set; }
+    private bool _showDeleteItemDialog { get; set; }
+    private TakeOutDetails _deleteItem { get; set; }
+    private string _deleteItemErrorMessage { get; set; }
+    private string _itemname { get; set; }
+    private int _quantity { get; set; }
+    private string _staffname { get; set; }
+    private DateTime _datetaken { get; set; }
+    private string _approvedby { get; set; }
+    private DateTime _dateapproved { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _items = TakeOutService.GetAll();
+        _add = AddInventoryService.GetAll();
+    }
+
+    private void OpenAddItemDialog()
+    {
+        _showAddItemDialog = true;
+        _itemname = "";
+        _quantity = 1;
+        _staffname = "";
+        _datetaken = DateTime.Today;
+        _dateapproved = DateTime.Today;
+    }
+
+    private void OnAddItemDialogClose(bool isCancel)
+    {
+        TimeSpan start = TimeSpan.Parse("9:00");
+        TimeSpan end = TimeSpan.Parse("16:00");
+        TimeSpan now = DateTime.Now.TimeOfDay;
+        DayOfWeek today = DateTime.Now.DayOfWeek;
+
+
+        if (today == DayOfWeek.Monday || today == DayOfWeek.Tuesday || today == DayOfWeek.Wednesday ||
+            today == DayOfWeek.Thursday || today == DayOfWeek.Friday)
+
+        {
+            if ((now > start) && (now < end))
+
+            {
+                if (isCancel)
+                {
+
+                    _showAddItemDialog = false;
+                }
+                else
+                {
+                    try
+                    {
+                        _addItemErrorMessage = "";
+                        _items = TakeOutService.Create(_itemname, _quantity, _staffname, _approvedby, _datetaken, _dateapproved);
+                        _showAddItemDialog = false;
+                    }
+                    catch (Exception e)
+                    {
+                        _addItemErrorMessage = e.Message;
+                    }
+                }
+
+            }
+            else
+            {
+                _addItemErrorMessage = " The item can be taken out only between 9am to 4pm !! ";
+
+                if (isCancel)
+                {
+
+                    _showAddItemDialog = false;
+                }
+            }
+        }
+        else
+        {
+            _addItemErrorMessage = " The item can be taken out only from Monday to Friday !!";
+            if (isCancel)
+            {
+
+                _showAddItemDialog = false;
+            }
+        }
+    }
+
+
+
+    private void OpenDeleteItemDialog(TakeOutDetails itemname)
+    {
+
+        _showDeleteItemDialog = true;
+        _deleteItem = itemname;
+
+    }
+    private void OnDeleteItemDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+
+            _showDeleteItemDialog = false;
+            _deleteItem = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteItemErrorMessage = "";
+                _items = TakeOutService.Delete(_deleteItem.Id);
+                _showDeleteItemDialog = false;
+                _deleteItem = null;
+            }
+            catch (Exception e)
+            {
+                _deleteItemErrorMessage = e.Message;
+            }
+        }
+
+    }
+}
+

@@ -1,0 +1,67 @@
+﻿@page "/inventorydetails"
+
+
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Inventory Detail Table</h1>
+</nav>
+
+
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Items </th>
+        <th>Quantity in Inventory</th>
+        <th>Last Taken Out On</th>
+    </tr>
+
+    @foreach (var item in _items) foreach (var add in _add)
+
+        {
+            @if (add.itemname == item.itemname)
+            {
+               
+
+                if (item.approvedby != null)
+                {
+                    <tr>
+                        <td>@item.itemname</td>
+
+                        <td>
+                            @{
+
+                                int quantity1, quantity2, totalquantity;
+                                quantity1 = add.quantity;
+                                quantity2 = item.quantity;
+                                totalquantity = -(quantity2 - quantity1);
+                            }
+
+                        @totalquantity
+                    </td>
+                    <td>@item.dateapproved.ToString("MMM dd, yyyy")</td>
+                    </tr>
+                }
+                else
+                {
+                    
+                }
+            }
+        }
+</table>
+
+@code {
+    public Role UserRole { get; set; }
+    private GlobalState _globalState { get; set; }
+    private List<TakeOutDetails> _items { get; set; }
+    private List<AddInventoryDetails> _add { get; set; }
+    private string _itemname { get; set; }
+    private int _quantity { get; set; }
+    private DateTime _datetaken { get; set; }
+    private int totalquantity { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _items = TakeOutService.GetAll();  
+        _add = AddInventoryService.GetAll();
+
+    }
+}

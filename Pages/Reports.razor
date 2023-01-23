@@ -1,0 +1,61 @@
+﻿@page "/reports"
+
+@using MudBlazor
+
+<table class="graph">
+    <tr>
+        <th>Items </th>
+        <th>Quantity Taken Out</th>
+
+    </tr>
+
+    @foreach (var item in _items)
+
+    {
+        <tr>
+            <td>@item.itemname</td>
+            <td>
+                @item.quantity
+            </td>
+        </tr>
+
+    }
+</table>
+
+<div>
+    <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+</div>
+
+
+
+
+
+
+
+@code {
+    private List<TakeOutDetails> _items { get; set; }
+    private List<AddInventoryDetails> _add { get; set; }
+    private string _itemname { get; set; }
+    private int _quantity { get; set; }
+    private DateTime _datetaken { get; set; }
+    private int totalquantity { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        _items = TakeOutService.GetAll();
+        _add = AddInventoryService.GetAll();
+
+        
+    }
+    public static List<double> datas = TakeOutService.GetChartData();
+    public static List<string> labels = TakeOutService.GetChartLabel();
+    public static double[] doubleDatas = datas.ToArray();
+    public static string[] stringLabels = labels.ToArray();
+    public List<ChartSeries> Series = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "Total Quantity Taken", Data = doubleDatas },
+    };
+    public string[] XAxisLabels = stringLabels;
+}
+

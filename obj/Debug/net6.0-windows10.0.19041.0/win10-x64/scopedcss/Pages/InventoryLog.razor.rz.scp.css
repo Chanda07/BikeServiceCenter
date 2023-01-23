@@ -1,0 +1,71 @@
+*[b-ijdnnqd7oy] {
+    font-family: 'Times New Roman';
+}
+
+
+
+
+
+
+nav[b-ijdnnqd7oy] {
+    background-color: beige;
+}
+
+h1[b-ijdnnqd7oy] {
+    color: bisque;
+    text-transform: uppercase;
+    font-family: 'Times New Roman';
+    align-content: center;
+}
+
+.btn-primary[b-ijdnnqd7oy] {
+    color: whitesmoke;
+    background-color: #1C6DD0;
+    text-transform: uppercase;
+    border-color: wheat;
+}
+
+    .btn-primary:hover[b-ijdnnqd7oy] {
+        color: white;
+        background-color: orangered;
+    }
+
+.table[b-ijdnnqd7oy] {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+    .table td[b-ijdnnqd7oy], .table th[b-ijdnnqd7oy] {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table tr th[b-ijdnnqd7oy] {
+        text-align: center;
+    }
+
+    .table tr:nth-child(even)[b-ijdnnqd7oy] {
+        background-color: #f2f2f2;
+    }
+
+    .table tr:hover[b-ijdnnqd7oy] {
+        background-color: #ddd;
+    }
+
+    .table th[b-ijdnnqd7oy] {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #1C6DD0;
+        color: white;
+    }
+
+.delbutton span[b-ijdnnqd7oy] {
+    text-transform: uppercase;
+}
+
+.form-floating[b-ijdnnqd7oy] {
+    padding: 5px;
+}

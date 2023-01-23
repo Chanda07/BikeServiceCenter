@@ -1,0 +1,81 @@
+﻿@page "/inventorylog"
+
+
+
+
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Inventory Log for the month @DateTime.Now.ToString("MMMM")</h1>
+  
+</nav>
+<center>
+<table id ="export" class="table table-bordered table-responsive table-hover">
+
+    <tr>
+        <th>Items </th>
+        <th>Quantity</th>
+        <th>Taken By</th>
+        <th>Approved By</th>
+        <th>Date Taken Out
+            @*<div class="d-flex">
+                Date Taken Out
+                <a class='btn text-@(_sortBy == "status" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                   @onclick='()=>SortByHandler("status")'>
+                    <span class='oi oi-sort-@(_sortBy == "status" ? _sortDirection : "ascending")' />
+                </a>
+            </div>*@
+        </th>
+
+    </tr>
+
+    @foreach (var item in _items)
+    {
+        <tr>
+            <td>@item.itemname</td>
+            <td>@item.quantity</td>
+            <td>@item.staffname</td>
+            <td>@item.approvedby</td>
+            <td>@item.dateapproved.ToString("MMM dd, yyyy")</td>
+            @*<td>@item.datetaken.ToString("MMM dd, yyyy")</td>*@
+        </tr>
+    }
+</table>
+</center>
+@code {
+
+    public Role UserRole { get; set; }
+    private GlobalState _globalState { get; set; }
+    private List<TakeOutDetails> _items { get; set; }
+    private string _itemname { get; set; }
+    private int _quantity { get; set; }
+    private string _staffname { get; set; }
+    private string _approvedby { get; set; }
+    private DateTime _datetaken { get; set; }
+    private DateTime _dateapproved { get; set; }
+    private string _sortBy = "dateTaken";
+    private string _sortDirection = "ascending";
+    private TakeOutDetails[] details;
+
+    protected override void OnInitialized()
+    {
+        _items = TakeOutService.GetAll();  
+
+    }
+
+    private void SortByHandler(string sortByName)
+    {
+        if (_sortBy == sortByName)
+        {
+            _sortDirection = _sortDirection == "ascending" ? "descending" : "ascending";
+        }
+        else
+        {
+            _sortBy = sortByName;
+            _sortDirection = "ascending";
+        }
+    }
+
+    
+}
+
+

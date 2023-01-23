@@ -1,0 +1,87 @@
+*[b-ae9z9qm0q1] {
+    font-family: 'Times New Roman';
+}
+
+
+
+
+
+
+nav[b-ae9z9qm0q1]{
+    background-color:beige;
+}
+
+h1[b-ae9z9qm0q1]{
+    color:bisque;
+    text-transform:uppercase;
+    font-family: 'Times New Roman';
+    align-content:center;
+}
+
+.btn-primary[b-ae9z9qm0q1] {
+    color: whitesmoke;
+    background-color: #1C6DD0;
+    text-transform: uppercase;
+    border-color: wheat;
+}
+.btn-primary:hover[b-ae9z9qm0q1]{
+    color: white;
+    background-color:orangered;
+}
+
+.items[b-ae9z9qm0q1] {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+.items td[b-ae9z9qm0q1], .items th[b-ae9z9qm0q1] {
+        border: 1px solid #ddd;
+        padding: 8px;
+      
+    }
+
+.items tr th[b-ae9z9qm0q1]{
+    text-align:center;
+    
+}
+.items tr:nth-child(even)[b-ae9z9qm0q1] {
+        background-color: #f2f2f2;
+}
+
+.items tr:hover[b-ae9z9qm0q1] {
+        background-color: #ddd;
+    }
+
+.items th[b-ae9z9qm0q1] {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #1C6DD0;
+        color: white;
+}
+
+.delbutton span[b-ae9z9qm0q1]{
+    text-transform: uppercase;
+}
+
+.form-floating[b-ae9z9qm0q1]{
+    padding:5px;   
+}
+
+.editbutton[b-ae9z9qm0q1] {
+   border-color:aliceblue;
+   color:cornflowerblue;
+
+ 
+}
+
+.editbutton:hover[b-ae9z9qm0q1] {
+        border: aliceblue;
+        color:white
+}
+
+MudCardContent[b-ae9z9qm0q1]{
+   color:red;
+}
+

@@ -1,0 +1,71 @@
+*[b-644l32s24c] {
+    font-family: 'Times New Roman';
+}
+
+
+
+
+
+
+nav[b-644l32s24c] {
+    background-color: beige;
+}
+
+h1[b-644l32s24c] {
+    color: bisque;
+    text-transform: uppercase;
+    font-family: 'Times New Roman';
+    align-content: center;
+}
+
+.btn-primary[b-644l32s24c] {
+    color: whitesmoke;
+    background-color: #1C6DD0;
+    text-transform: uppercase;
+    border-color: wheat;
+}
+
+    .btn-primary:hover[b-644l32s24c] {
+        color: white;
+        background-color: orangered;
+    }
+
+.table[b-644l32s24c] {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+    .table td[b-644l32s24c], .table th[b-644l32s24c] {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table tr th[b-644l32s24c] {
+        text-align: center;
+    }
+
+    .table tr:nth-child(even)[b-644l32s24c] {
+        background-color: #f2f2f2;
+    }
+
+    .table tr:hover[b-644l32s24c] {
+        background-color: #ddd;
+    }
+
+    .table th[b-644l32s24c] {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #1C6DD0;
+        color: white;
+    }
+
+.delbutton span[b-644l32s24c] {
+    text-transform: uppercase;
+}
+
+.form-floating[b-644l32s24c] {
+    padding: 5px;
+}

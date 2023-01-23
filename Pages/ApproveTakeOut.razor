@@ -1,0 +1,411 @@
+﻿@page "/approvetakeout"
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Approve Take Out</h1>
+</nav>
+<ul class="nav nav-tabs">
+    <li class="nav-item ">
+        <a class='nav-link btn @(_tabFilter == "All" ? "active" : "")' @onclick='()=>TabFilter("All")'>All</a>
+    </li>
+    <li class="nav-item">
+        <a class='nav-link btn @(_tabFilter == "To Be Approved" ? "active" : "")' @onclick='()=>TabFilter("To Be Approved")'>Approval Due</a>
+    </li>
+    <li class="nav-item">
+        <a class='nav-link btn @(_tabFilter == "Approved" ? "active" : "")' @onclick='()=>TabFilter("Approved")'>Approved</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <div class="d-flex">
+                    Approval Status
+                    <a class='btn text-@(_sortBy == "status" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("status")'>
+                        <span class='oi oi-sort-@(_sortBy == "status" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Item Name
+                    <a class='btn text-@(_sortBy == "itemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("itemName")'>
+                        <span class='oi oi-sort-@(_sortBy == "itemName" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Quantity
+                    <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("quantity")'>
+                        <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Taken By
+                    <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("takenBy")'>
+                        <span class='oi oi-sort-@(_sortBy == "takenBy" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+
+            <th>
+                <div class="d-flex">
+                    Approved By
+                    <a class='btn text-@(_sortBy == "approvedBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("approvedBy")'>
+                        <span class='oi oi-sort-@(_sortBy == "approvedBy" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Date Approved
+                    <a class='btn text-@(_sortBy == "approvedAt" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("approvedAt")'>
+                        <span class='oi oi-sort-@(_sortBy == "approvedAt" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Date Requested
+                    <a class='btn text-@(_sortBy == "dateTaken" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("dateTaken")'>
+                        <span class='oi oi-sort-@(_sortBy == "dateTaken" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            IEnumerable<TakeOutDetails> takeoutList = _takeout;
+            if (_sortBy == "status")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.IsDone) : takeoutList.OrderByDescending(t =>
+                t.IsDone);
+            }
+            else if (_sortBy == "itemName")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.itemname) : takeoutList.OrderByDescending(t =>
+                t.itemname);
+            }
+            else if (_sortBy == "quantity")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.quantity) : takeoutList.OrderByDescending(t =>
+                t.quantity);
+            }
+            else if (_sortBy == "takenBy")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.staffname) : takeoutList.OrderByDescending(t =>
+                t.staffname);
+            }
+            else if (_sortBy == "approvedBy")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.approvedby) : takeoutList.OrderByDescending(t =>
+                t.approvedby);
+            }
+            else if (_sortBy == "approvedAt")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.dateapproved) : takeoutList.OrderByDescending(t =>
+                t.dateapproved);
+            }
+            else if (_sortBy == "dateTaken")
+            {
+                takeoutList = _sortDirection == "ascending" ? takeoutList.OrderBy(t => t.datetaken) : takeoutList.OrderByDescending(t =>
+                t.datetaken);
+            }
+
+
+            if (_tabFilter == "To Be Approved")
+            {
+                takeoutList = takeoutList.Where(t => !t.IsDone);
+
+            }
+            else if (_tabFilter == "Approved")
+            {
+                takeoutList = takeoutList.Where(t => t.IsDone);
+            }
+
+            foreach (var takeoutItem in takeoutList) 
+            {
+                        <tr>
+                            <td>
+                        @{
+                            TimeSpan start = TimeSpan.Parse("9:00");
+                            TimeSpan end = TimeSpan.Parse("16:00");
+                            TimeSpan now = DateTime.Now.TimeOfDay;
+                            DayOfWeek today = DateTime.Now.DayOfWeek;
+                            if (today == DayOfWeek.Monday || today == DayOfWeek.Tuesday || today == DayOfWeek.Wednesday || today == DayOfWeek.Thursday || today == DayOfWeek.Friday)
+                            {
+                                if ((now > start) && (now < end))
+                                {
+                                      <div class="form-check">
+                                      <input class="form-check-input me-0" type="checkbox" readonly="true" disabled="@takeoutItem.IsDone" checked="@takeoutItem.IsDone"
+                                       @onchange='()=>ToggleDone(takeoutItem)' />
+                                       </div>
+                                }
+                                else
+                                {
+                                    <span class="">Cannot approve at @DateTime.Now.ToString("h:mm tt")</span>
+                                }
+                            }
+                            else
+                            {
+                                      <span class="">Cannot approve on @DateTime.Now.ToString("dddd")</span>
+                            }
+                        }
+                            </td>
+                            <td class='@(takeoutItem.IsDone ? "text-decoration-line-through" : "")'>@takeoutItem.itemname</td>
+                            <td>
+                                
+                                @takeoutItem.quantity</td>
+                            <td>
+                                <p>@takeoutItem.staffname</p>
+                            </td>
+                            <td>
+                                <p>@takeoutItem.approvedby</p>
+
+                            </td>
+                            <td>
+                                <p>
+                            @takeoutItem.dateapproved.ToString("MMM dd,yyyy")
+                                </p>
+                            </td>
+                            <td>
+                        @{
+                            bool isToday = !takeoutItem.IsDone && takeoutItem.datetaken == DateTime.Today;
+                            bool isOlder = !takeoutItem.IsDone && takeoutItem.datetaken < DateTime.Today;
+                                        <p class='small mb-0 @(isToday ? "text-warning" : isOlder ? "text-danger" : "")'>
+                                @if (isToday || isOlder)
+                                {
+                                                    <span class="" />
+                                }
+                                @takeoutItem.datetaken.ToString("MMM dd, yyyy")
+                                        </p>
+                        }
+                            </td>
+                            <td>
+                                <button disabled="@takeoutItem.IsDone" class="btn btn-outline-secondary" type="button"
+                                @onclick="()=>OpenEditTakeOutDialog(takeoutItem)">
+                                    <span class="editbutton" /> Edit
+                                </button>
+                                <button class="btn btn-outline-danger" type="button" @onclick="()=>OpenDeleteTakeOutDialog(takeoutItem)">
+                                    <span class="delbutton" /> Delete
+                                </button>
+                            </td>
+                        </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (_showEditTakeOutDialog)
+{
+    TimeSpan start = TimeSpan.Parse("9:00");
+    TimeSpan end = TimeSpan.Parse("16:00");
+    TimeSpan now = DateTime.Now.TimeOfDay;
+    DayOfWeek today = DateTime.Now.DayOfWeek;
+    if (today == DayOfWeek.Monday || today == DayOfWeek.Tuesday || today == DayOfWeek.Wednesday || today == DayOfWeek.Thursday || today == DayOfWeek.Friday)
+
+    {
+        if ((now > start) && (now < end))
+
+        {
+             <ModalDialog Title="@_dialogTitle" OnClose="@OnEditTakeOutDialogClose" OkLabel="@_dialogOkLabel">
+
+             <div class="form-floating">
+              <input id="approvedAt" type="date"
+               value='@_takeoutModel.dateapproved.ToString("MMM dd, yyy")' @onchange="updateDate" class="form-control text-left"
+               placeholder="Approved Date">
+               <label for="approvedAt">Date Approved</label>
+               </div>
+                <div class="form-check">
+                    <input class="form-check-input me-0" type="checkbox" readonly="true" disabled="@_takeoutModel.IsDone" checked="@_takeoutModel.IsDone"
+               @onchange='()=>ToggleDone(_takeoutModel)'/>
+               <label for="status">Approval Status</label>
+                </div>
+
+                           
+
+                @if (!string.IsNullOrEmpty(_editTakeOutErrorMessage))
+                {
+                    <AlertMessage Type="danger" Message="@_editTakeOutErrorMessage" />
+                }
+                     </ModalDialog>
+        }
+        else
+        {
+
+            _editTakeOutErrorMessage = " The item can be taken out only between 9am to 4pm !! ";
+        }
+    }
+    else
+    {
+
+        _editTakeOutErrorMessage = " The item can be taken out only from Monday to Friday !!";
+    }
+
+}
+
+
+
+
+@if (_showDeleteTakeOutDialog)
+{
+        <ModalDialog Title="Delete TakeOut" OnClose="@OnDeleteTakeOutDialogClose" OkLabel="Confirm">
+            <p>Are you sure you want to delete <strong>@_deleteTakeOut.itemname</strong> ?</p>
+        @if (!string.IsNullOrEmpty(_deleteTakeOutErrorMessage))
+        {
+                    <AlertMessage Type="danger" Message="@_deleteTakeOutErrorMessage" />
+        }
+        </ModalDialog>
+}
+
+@code {
+    [CascadingParameter]
+    private GlobalState _globalState { get; set; }
+    private bool _showEditTakeOutDialog { get; set; }
+    private bool _showvalidation { get; set; }
+    private bool _showDeleteTakeOutDialog { get; set; }
+    private List<TakeOutDetails> _takeout { get; set; }
+    private List<AddInventoryDetails> _add { get; set; }
+
+    private TakeOutDetails _deleteTakeOut { get; set; }
+    private string _dialogTitle { get; set; }
+    private string _dialogOkLabel { get; set; }
+    private string _editTakeOutErrorMessage { get; set; }
+    private string _deleteTakeOutErrorMessage { get; set; }
+    private TakeOutDetails _takeoutModel { get; set; }
+    private string _tabFilter = "All";
+    private string _sortBy = "dateTaken";
+    private string _sortDirection = "ascending";
+    private bool isCancel { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        _takeout = TakeOutService.GetAll();
+        _add = AddInventoryService.GetAll();
+    }
+
+    private void SortByHandler(string sortByName)
+    {
+        if (_sortBy == sortByName)
+        {
+            _sortDirection = _sortDirection == "ascending" ? "descending" : "ascending";
+        }
+        else
+        {
+            _sortBy = sortByName;
+            _sortDirection = "ascending";
+        }
+    }
+
+    
+
+    private void OpenAddTakeOutDialog()
+    {
+        _dialogTitle = "Add TakeOut";
+        _dialogOkLabel = "Add";
+        _takeoutModel = new TakeOutDetails();
+        _takeoutModel.Id = Guid.Empty;
+        _showEditTakeOutDialog = true;
+    }
+
+
+
+    private void OpenEditTakeOutDialog(TakeOutDetails editTakeOut)
+    {
+        _dialogTitle = "Edit TakeOut";
+        _dialogOkLabel = "Save";
+        _takeoutModel = editTakeOut;
+        _showEditTakeOutDialog = true;
+    }
+
+    private void OpenDeleteTakeOutDialog(TakeOutDetails takeoutItem)
+    {
+        _deleteTakeOut = takeoutItem;
+        _showDeleteTakeOutDialog = true;
+    }
+
+    private void updateDate(ChangeEventArgs e)
+    {
+        _takeoutModel.dateapproved = DateTime.Parse(e.Value.ToString());
+        //_takeoutModel.dateapproved = DateTime.ToString("MMM dd,yyyy");
+
+    }
+    private void OnEditTakeOutDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+            _showEditTakeOutDialog = false;
+        }
+        else
+        {
+            try
+            {
+                _editTakeOutErrorMessage = "";
+                if (_takeoutModel.Id == Guid.Empty)
+                {
+                    _takeout = TakeOutService.Create(_takeoutModel.itemname, _takeoutModel.quantity, _takeoutModel.staffname, _takeoutModel.approvedby, _takeoutModel.dateapproved, _takeoutModel.datetaken);
+                }
+                else
+                {
+                    _takeout = TakeOutService.Update(_takeoutModel.itemname, _takeoutModel.quantity, _takeoutModel.staffname, _takeoutModel.approvedby, _takeoutModel.dateapproved, _takeoutModel.datetaken,
+                    _takeoutModel.IsDone);
+                }
+                _showEditTakeOutDialog = false;
+            }
+            catch (Exception e)
+            {
+                _editTakeOutErrorMessage = e.Message;
+            }
+        }
+    }
+    private void OnDeleteTakeOutDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+
+            _showDeleteTakeOutDialog = false;
+            _deleteTakeOut = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteTakeOutErrorMessage = "";
+                _takeout = TakeOutService.Delete(_deleteTakeOut.Id);
+                _showDeleteTakeOutDialog = false;
+                _deleteTakeOut = null;
+            }
+            catch (Exception e)
+            {
+                _deleteTakeOutErrorMessage = e.Message;
+            }
+        }
+    }
+    private void TabFilter(string status)
+    {
+        _tabFilter = status;
+    }
+    private void ToggleDone(TakeOutDetails todo)
+    {
+        todo.IsDone = !todo.IsDone;
+
+        //_takeout = TakeOutService.Update(_takeoutModel.itemname, _takeoutModel.quantity, _takeoutModel.staffname, _takeoutModel.approvedby, _takeoutModel.dateapproved, _takeoutModel.datetaken,
+        //            _takeoutModel.IsDone);
+    }
+}
+
+
+

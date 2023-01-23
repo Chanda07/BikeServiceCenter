@@ -1,0 +1,234 @@
+﻿@page "/addinventory"
+
+
+<body>
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Add Inventory</h1>
+    <button class="btn btn-primary" type="button" @onclick="OpenAddItemDialog">
+            <span/>Add Item
+    </button>
+</nav>
+<table class="items" id="items">
+    
+    <tr>
+        <th>Item Name </th>
+        <th>Quantity</th>
+        <th>Added By</th>
+        <th>Item Added Date and Time</th>
+        <th>Action</th>
+    </tr>
+    @foreach (var item in _items)
+    {
+        <tr>
+            <td>@item.itemname</td>
+                @*<td>
+                    @{
+                        if ((newitem == item.itemname) && (item.dateitemadded == item.dateitemadded))
+                        {
+                            totalquantity += item.quantity;
+                        }
+                    }
+                    @totalquantity
+                </td>*@
+                <td>@item.quantity</td>
+                <td>@item.addedby</td>
+                <td>@item.dateitemadded.ToString("dddd, dd MMM yyyy hh:mm tt")</td>
+
+                <td class="delbutton">
+                    <button class="btn " type="button" @onclick="()=>Update(item)">
+                        <span class="editbutton"> Edit</span>
+
+                    </button>
+
+                    <button class="btn btn-outline-danger" type="button" @onclick="()=>OpenDeleteItemDialog(item)">
+                        <span class="delbutton"> Delete</span>
+
+                    </button>
+                </td>
+
+                
+            </tr>
+        
+    }
+</table>
+</body>
+
+@if (_showAddItemDialog)
+{
+    <ModalDialog Title="Add Item" OnClose="@OnAddItemDialogClose" OkLabel="Add">
+        <form>
+            <div class="form-floating">
+                <input type="text" class="form-control username" @bind="_item" placeholder="Item" required />
+                <label for="floatingInput">Item Name</label>
+            </div>
+            <div class="form-floating">
+                <input type="number" class="form-control username" min="1" @bind="_quantity" placeholder="Quantity" />
+                <label for="floatingInput">Quantity</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control username" @bind="_addedby" ReadOnly="true" placeholder="Approved By" />
+                <label for="floatingInput">Added By</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="date" class="form-control username" @bind="_dateitemadded" ReadOnly="true" placeholder="Date Taken out" />
+                <label for="floatingInput">Item Added Date</label>
+            </div>
+
+            @if (!string.IsNullOrEmpty(_addItemErrorMessage))
+            {
+                <AlertMessage Type="danger" Message="@_addItemErrorMessage" />
+            }
+        </form>
+    </ModalDialog>
+}
+@if (showUpdateMessage == true)
+{
+    <MudCard Class="mt-4">
+        <MudCardContent>
+            <MudText Typo="Typo.h5">Do you want to add more <strong>@updateItem.itemname</strong>?</MudText>
+            <MudTextField Label="Quantity" @bind-Value="_quantity" Required="true" RequiredError="Quantity is required!" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="col-md-1 me-2" OnClick="UpdateItem">Yes</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="col-md-1" OnClick="CloseUpdateCard">No</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+@if (_showDeleteItemDialog)
+{
+
+    <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
+
+        <p>Are you sure you want to delete <strong>@_deleteItem.itemname</strong> item and their data?</p>
+        @if (!string.IsNullOrEmpty(_deleteItemErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_deleteItemErrorMessage" />
+        }
+
+    </ModalDialog>
+}
+
+
+@code {
+    [CascadingParameter]
+
+
+    public Role UserRole { get; set; }
+    private GlobalState _globalState { get; set; }
+    private List<AddInventoryDetails> _items { get; set; }
+    private bool _showAddItemDialog { get; set; }
+    private string _addItemErrorMessage { get; set; }
+    private bool _showDeleteItemDialog { get; set; }
+    private AddInventoryDetails _deleteItem { get; set; }
+    private string _deleteItemErrorMessage { get; set; }
+    private string _item { get; set; }
+    private int _quantity { get; set; }
+    private string _addedby { get; set; } = "Admin";
+    private DateTime _dateitemadded { get; set; }
+    private int totalquantity{ get; set; }
+    private string newitem { get; set; }
+    private AddInventoryDetails updateItem { get; set; }
+    bool showUpdateMessage = false;
+    private string updateErrorMessage = "";
+
+
+
+    protected override void OnInitialized()
+    {
+        _items = AddInventoryService.GetAll();
+    }
+
+    private void OpenAddItemDialog()
+    {
+        _showAddItemDialog = true;
+        _item = "";
+        _quantity = 0;
+        _dateitemadded = DateTime.Now ;
+    }
+
+
+
+    private void OnAddItemDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+            _showAddItemDialog = false;
+        }
+        else
+        {
+            if ((_item == null) && (_quantity < 0) && (_addedby == null))
+            {
+                throw new Exception("field already exists.");
+            }
+            else
+            {
+                try
+                {
+                    _addItemErrorMessage = "";
+                    _items = AddInventoryService.Create(_item, _quantity, _addedby, _dateitemadded);
+                    _showAddItemDialog = false;
+                }
+                catch (Exception e)
+                {
+                    _addItemErrorMessage = e.Message;
+                }
+            }
+        }
+    }
+
+    private void OpenDeleteItemDialog(AddInventoryDetails item)
+    {
+
+
+        _showDeleteItemDialog = true;
+        _deleteItem = item;
+
+    }
+    private void OnDeleteItemDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+            _showDeleteItemDialog = false;
+            _deleteItem = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteItemErrorMessage = "";
+                _items = AddInventoryService.Delete(_deleteItem.Id);
+                _showDeleteItemDialog = false;
+                _deleteItem = null;
+            }
+            catch (Exception e)
+            {
+                _deleteItemErrorMessage = e.Message;
+            }
+        }
+    }
+
+    private void Update(AddInventoryDetails item)
+    {
+        updateItem = item;
+        showUpdateMessage = true;
+    }
+    public void CloseUpdateCard()
+    {
+        showUpdateMessage = false;
+    }
+    private void UpdateItem()
+    {
+        try
+        {
+            updateErrorMessage = "";
+            _items = AddInventoryService.UpdateItem(updateItem.itemname, _quantity);
+            CloseUpdateCard();
+            updateItem = null;
+        }
+        catch (Exception e)
+        {
+            updateErrorMessage = e.Message;
+        }
+    }
+}

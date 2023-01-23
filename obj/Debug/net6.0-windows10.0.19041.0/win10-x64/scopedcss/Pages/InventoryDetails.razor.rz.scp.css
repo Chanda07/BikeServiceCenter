@@ -1,0 +1,71 @@
+*[b-8fgpz2atb3] {
+    font-family: 'Times New Roman';
+}
+
+
+
+
+
+
+nav[b-8fgpz2atb3] {
+    background-color: beige;
+}
+
+h1[b-8fgpz2atb3] {
+    color: bisque;
+    text-transform: uppercase;
+    font-family: 'Times New Roman';
+    align-content: center;
+}
+
+.btn-primary[b-8fgpz2atb3] {
+    color: whitesmoke;
+    background-color: #1C6DD0;
+    text-transform: uppercase;
+    border-color: wheat;
+}
+
+    .btn-primary:hover[b-8fgpz2atb3] {
+        color: white;
+        background-color: orangered;
+    }
+
+.table[b-8fgpz2atb3] {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+    .table td[b-8fgpz2atb3], .table th[b-8fgpz2atb3] {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table tr th[b-8fgpz2atb3] {
+        text-align: center;
+    }
+
+    .table tr:nth-child(even)[b-8fgpz2atb3] {
+        background-color: #f2f2f2;
+    }
+
+    .table tr:hover[b-8fgpz2atb3] {
+        background-color: #ddd;
+    }
+
+    .table th[b-8fgpz2atb3] {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #1C6DD0;
+        color: white;
+    }
+
+.delbutton span[b-8fgpz2atb3] {
+    text-transform: uppercase;
+}
+
+.form-floating[b-8fgpz2atb3] {
+    padding: 5px;
+}

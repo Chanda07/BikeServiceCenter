@@ -1,0 +1,71 @@
+*[b-r6jty5m3qc] {
+    font-family: 'Times New Roman';
+}
+
+
+
+
+
+
+nav[b-r6jty5m3qc] {
+    background-color: beige;
+}
+
+h1[b-r6jty5m3qc] {
+    color: bisque;
+    text-transform: uppercase;
+    font-family: 'Times New Roman';
+    align-content: center;
+}
+
+.btn-primary[b-r6jty5m3qc] {
+    color: whitesmoke;
+    background-color: #1C6DD0;
+    text-transform: uppercase;
+    border-color: wheat;
+}
+
+    .btn-primary:hover[b-r6jty5m3qc] {
+        color: white;
+        background-color: orangered;
+    }
+
+.table[b-r6jty5m3qc] {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+    .table td[b-r6jty5m3qc], .table th[b-r6jty5m3qc] {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table tr th[b-r6jty5m3qc] {
+        text-align: center;
+    }
+
+    .table tr:nth-child(even)[b-r6jty5m3qc] {
+        background-color: #f2f2f2;
+    }
+
+    .table tr:hover[b-r6jty5m3qc] {
+        background-color: #ddd;
+    }
+
+    .table th[b-r6jty5m3qc] {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #1C6DD0;
+        color: white;
+    }
+
+.delbutton span[b-r6jty5m3qc] {
+    text-transform: uppercase;
+}
+
+.form-floating[b-r6jty5m3qc] {
+    padding: 5px;
+}
